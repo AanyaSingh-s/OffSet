@@ -28,6 +28,9 @@ public class DemoService {
     private static final Logger log = LoggerFactory.getLogger(DemoService.class);
 
     @Autowired private AccountRepository accounts;
+    @Autowired private com.demo.upimesh.model.UserRepository users;
+    @Autowired private com.demo.upimesh.model.OfflineWalletRepository wallets;
+    @Autowired private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
     @Autowired private HybridCryptoService crypto;
     @Autowired private ServerKeyHolder serverKey;
 
@@ -39,6 +42,22 @@ public class DemoService {
             accounts.save(new Account("carol@demo", "Carol",   new BigDecimal("2500.00")));
             accounts.save(new Account("dave@demo",  "Dave",    new BigDecimal("500.00")));
             log.info("Seeded 4 demo accounts");
+        }
+
+        if (users.count() == 0) {
+            users.save(new com.demo.upimesh.model.User("alice", passwordEncoder.encode("password123"), "Alice", "alice@demo"));
+            users.save(new com.demo.upimesh.model.User("bob",   passwordEncoder.encode("password123"), "Bob",   "bob@demo"));
+            users.save(new com.demo.upimesh.model.User("carol", passwordEncoder.encode("password123"), "Carol", "carol@demo"));
+            users.save(new com.demo.upimesh.model.User("dave",  passwordEncoder.encode("password123"), "Dave",  "dave@demo"));
+            log.info("Seeded 4 demo users (password: password123)");
+        }
+
+        if (wallets.count() == 0) {
+            wallets.save(new com.demo.upimesh.model.OfflineWallet("alice", new BigDecimal("1000.00"), new BigDecimal("2000.00"), new BigDecimal("10000.00")));
+            wallets.save(new com.demo.upimesh.model.OfflineWallet("bob",   new BigDecimal("500.00"),  new BigDecimal("2000.00"), new BigDecimal("10000.00")));
+            wallets.save(new com.demo.upimesh.model.OfflineWallet("carol", new BigDecimal("500.00"),  new BigDecimal("2000.00"), new BigDecimal("10000.00")));
+            wallets.save(new com.demo.upimesh.model.OfflineWallet("dave",  new BigDecimal("250.00"),  new BigDecimal("2000.00"), new BigDecimal("10000.00")));
+            log.info("Seeded 4 demo offline wallets");
         }
     }
 
