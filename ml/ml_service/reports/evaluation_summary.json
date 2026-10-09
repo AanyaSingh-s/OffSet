@@ -1,0 +1,49 @@
+{
+  "native": {
+    "selected_model": "random_forest",
+    "thresholds": {
+      "logistic_regression": {
+        "ml_only": 0.835650088964007,
+        "hybrid": 0.8476345855990727,
+        "high": 0.9862917457229711
+      },
+      "random_forest": {
+        "ml_only": 0.2915950620738489,
+        "hybrid": 0.31375890887454744,
+        "high": 0.7025426019014401
+      },
+      "isolation_forest": {
+        "ml_only": 0.5372131975498329,
+        "hybrid": 0.5396446311629957,
+        "high": 0.6066501749801106
+      }
+    }
+  },
+  "extended": {
+    "selected_model": "random_forest",
+    "thresholds": {
+      "logistic_regression": {
+        "ml_only": 0.82254649943436,
+        "hybrid": 0.8364403384572595,
+        "high": 0.9967129231151258
+      },
+      "random_forest": {
+        "ml_only": 0.2712251168690393,
+        "hybrid": 0.28620320892236834,
+        "high": 0.7408558972050165
+      },
+      "isolation_forest": {
+        "ml_only": 0.5242918770859797,
+        "hybrid": 0.5268751753257227,
+        "high": 1.01
+      }
+    }
+  },
+  "latency_ms": {
+    "n": 2950,
+    "mean_ms": 15.858139256646824,
+    "p50_ms": 15.148299979045987,
+    "p95_ms": 20.99425990600139,
+    "p99_ms": 27.065340022090787
+  }
+}

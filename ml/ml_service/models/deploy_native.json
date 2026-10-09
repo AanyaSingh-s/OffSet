@@ -1,0 +1,75 @@
+{
+  "tier": "native",
+  "model_name": "random_forest",
+  "features": [
+    "log_amount",
+    "amount_to_server_balance",
+    "log_hist_n",
+    "is_cold_start",
+    "log_hist_median",
+    "hist_std_log",
+    "amount_over_median_log",
+    "amount_zscore",
+    "cnt_10m",
+    "cnt_1h",
+    "cnt_24h",
+    "day_count",
+    "log_day_spend",
+    "log_spend_1h",
+    "log_interval_s",
+    "has_recent_prev",
+    "receiver_prior_count",
+    "receiver_share",
+    "is_new_receiver",
+    "n_receivers",
+    "hour_sin",
+    "hour_cos",
+    "night_flag",
+    "hour_share",
+    "is_weekend",
+    "daytype_share",
+    "log_sync_lag_min",
+    "queue_depth",
+    "log_queue_spend"
+  ],
+  "model_version": "offset-native-random_forest-f69423ea",
+  "thresholds": {
+    "medium": 0.31375890887454744,
+    "high": 0.7025426019014401
+  },
+  "ml_only_threshold": 0.2915950620738489,
+  "validation": {
+    "logistic_regression": {
+      "val_pr_auc": 0.5244172608270435,
+      "val_hybrid_fbeta": 0.5196278647606081,
+      "val_hybrid_recall": 0.538506760728983,
+      "val_hybrid_fpr": 0.029636452294522404
+    },
+    "random_forest": {
+      "val_pr_auc": 0.7061775546317673,
+      "val_hybrid_fbeta": 0.6670699516058073,
+      "val_hybrid_recall": 0.7131099353321576,
+      "val_hybrid_fpr": 0.029121742428346968
+    },
+    "isolation_forest": {
+      "val_pr_auc": 0.2953436902094555,
+      "val_hybrid_fbeta": 0.3135372214319583,
+      "val_hybrid_recall": 0.31099353321575546,
+      "val_hybrid_fpr": 0.02988026223113182
+    }
+  },
+  "beta": 2.0,
+  "max_fpr": 0.03,
+  "high_precision_target": 0.9,
+  "policy": {
+    "packet_max_age_s": 86400,
+    "idempotency_ttl_s": 86400,
+    "future_skew_s": 300,
+    "max_amount": 1000.0,
+    "daily_limit": 2500.0,
+    "max_tx_per_hour": 10,
+    "max_offline_hours": 12.0,
+    "balance_tol": 0.01
+  },
+  "sklearn_version": "1.9.1"
+}
