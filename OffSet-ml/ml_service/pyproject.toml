@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "offset-ml"
+version = "1.0.0"
+description = "Behavioural fraud detection service for the OffSet offline payment system"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+include = ["offset_ml*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
