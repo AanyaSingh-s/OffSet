@@ -1,0 +1,15 @@
+# Overrides for offset_ml.config defaults. Remove a key to use the built-in default.
+generator:
+  seed: 42
+  n_users: 3000
+  horizon_days: 180
+  attack_episode_prob: 0.009
+policy:
+  max_amount: 1000.0
+  daily_limit: 2500.0
+  max_tx_per_hour: 10
+  max_offline_hours: 12.0
+split:
+  seed: 7
+model:
+  seed: 13

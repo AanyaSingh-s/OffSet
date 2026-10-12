@@ -1,0 +1,40 @@
+{
+  "selected": "random_forest",
+  "thresholds": {
+    "logistic_regression": {
+      "ml_only": 0.82254649943436,
+      "hybrid": 0.8364403384572595,
+      "high": 0.9967129231151258
+    },
+    "random_forest": {
+      "ml_only": 0.2712251168690393,
+      "hybrid": 0.28620320892236834,
+      "high": 0.7408558972050165
+    },
+    "isolation_forest": {
+      "ml_only": 0.5242918770859797,
+      "hybrid": 0.5268751753257227,
+      "high": 1.01
+    }
+  },
+  "validation": {
+    "logistic_regression": {
+      "val_pr_auc": 0.5932650695468676,
+      "val_hybrid_fbeta": 0.5861645060348681,
+      "val_hybrid_recall": 0.6166960611405056,
+      "val_hybrid_fpr": 0.029663542287479007
+    },
+    "random_forest": {
+      "val_pr_auc": 0.7703002755358763,
+      "val_hybrid_fbeta": 0.729031560743623,
+      "val_hybrid_recall": 0.7930629041740153,
+      "val_hybrid_fpr": 0.029771902259305413
+    },
+    "isolation_forest": {
+      "val_pr_auc": 0.30307256557910006,
+      "val_hybrid_fbeta": 0.39522700814901046,
+      "val_hybrid_recall": 0.3991769547325103,
+      "val_hybrid_fpr": 0.029988622202958226
+    }
+  }
+}
