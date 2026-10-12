@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { WalletService } from '../services/api';
+import { useNetwork } from '../context/NetworkContext';
+import { getWallet, saveWallet, LocalWallet } from '../services/indexedDb';
 import { Link } from 'react-router-dom';
 import { 
   QrCode, 
@@ -14,14 +16,51 @@ import {
 
 export const Home: React.FC = () => {
   const { user } = useAuth();
+  const { isOnline } = useNetwork();
   const [wallet, setWallet] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchWalletData = async () => {
+    if (!user?.username) return;
     try {
       setLoading(true);
-      const data = await WalletService.getWallet();
-      setWallet(data);
+      if (isOnline) {
+        try {
+          const data = await WalletService.getWallet();
+          const cached: LocalWallet = {
+            owner: user.username,
+            balance: Number(data.balance),
+            transactionLimit: Number(data.transactionLimit),
+            dailyLimit: Number(data.dailyLimit),
+            dailyUsed: Number(data.dailyUsed || 0),
+            walletVersion: Number(data.walletVersion),
+            lastUpdatedAt: new Date().toISOString(),
+          };
+          await saveWallet(cached);
+          setWallet(cached);
+          return;
+        } catch (e) {
+          console.warn('Backend unavailable, reading wallet from offsetDB:', e);
+        }
+      }
+
+      // Read from offsetDB
+      const local = await getWallet(user.username);
+      if (local) {
+        setWallet(local);
+      } else {
+        const initial: LocalWallet = {
+          owner: user.username,
+          balance: 1000.0,
+          transactionLimit: 2000.0,
+          dailyLimit: 10000.0,
+          dailyUsed: 0.0,
+          walletVersion: 1,
+          lastUpdatedAt: new Date().toISOString(),
+        };
+        await saveWallet(initial);
+        setWallet(initial);
+      }
     } catch (err) {
       console.error('Failed to load wallet:', err);
     } finally {
@@ -31,7 +70,7 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     fetchWalletData();
-  }, []);
+  }, [user, isOnline]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>

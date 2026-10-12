@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNetwork } from '../context/NetworkContext';
+import { getWallet, saveWallet, LocalWallet } from '../services/indexedDb';
 import { WalletService } from '../services/api';
 import { Wallet as WalletIcon, CheckCircle2, AlertCircle, Loader2, ArrowDownCircle } from 'lucide-react';
 
 export const Wallet: React.FC = () => {
+  const { user } = useAuth();
+  const { isOnline } = useNetwork();
   const [wallet, setWallet] = useState<any>(null);
   const [limits, setLimits] = useState<any>(null);
   const [, setLoading] = useState(true);
@@ -14,14 +19,45 @@ export const Wallet: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const loadWalletDetails = async () => {
+    if (!user?.username) return;
     try {
       setLoading(true);
-      const [walletData, limitsData] = await Promise.all([
-        WalletService.getWallet(),
-        WalletService.getLimits(),
-      ]);
-      setWallet(walletData);
-      setLimits(limitsData);
+      if (isOnline) {
+        try {
+          const [walletData, limitsData] = await Promise.all([
+            WalletService.getWallet(),
+            WalletService.getLimits(),
+          ]);
+          setWallet(walletData);
+          setLimits(limitsData);
+
+          const cached: LocalWallet = {
+            owner: user.username,
+            balance: Number(walletData.balance),
+            transactionLimit: Number(walletData.transactionLimit),
+            dailyLimit: Number(walletData.dailyLimit),
+            dailyUsed: Number(walletData.dailyUsed || 0),
+            walletVersion: Number(walletData.walletVersion),
+            lastUpdatedAt: new Date().toISOString(),
+          };
+          await saveWallet(cached);
+          return;
+        } catch (e) {
+          console.warn('Backend unavailable, reading wallet from offsetDB:', e);
+        }
+      }
+
+      // Offline fallback: load from offsetDB
+      const local = await getWallet(user.username);
+      if (local) {
+        setWallet(local);
+        setLimits({
+          transactionLimit: local.transactionLimit,
+          dailyLimit: local.dailyLimit,
+          dailyUsed: local.dailyUsed,
+          dailyRemaining: local.dailyLimit - local.dailyUsed,
+        });
+      }
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to fetch wallet info');
     } finally {
@@ -31,7 +67,7 @@ export const Wallet: React.FC = () => {
 
   useEffect(() => {
     loadWalletDetails();
-  }, []);
+  }, [user, isOnline]);
 
   const handleFund = async (e: React.FormEvent) => {
     e.preventDefault();
